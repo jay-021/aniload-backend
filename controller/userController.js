@@ -16,10 +16,10 @@ const signUpUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email }); 
+    const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).send({ message :"Email already exists!"}); 
+      return res.status(400).send({ message: "Email already exists!" });
     }
 
     const user = new User({
@@ -30,7 +30,7 @@ const signUpUser = async (req, res) => {
 
     await user.save();
 
-    res.send({ message : "user created successfully." });
+    res.send({ message: "user created successfully." });
   } catch (error) {
     res.status(500).send("something went wrong !");
     console.log("signUpUser", error);
@@ -46,7 +46,12 @@ const signInUser = async (req, res) => {
       const isMatchPassword = await bcrypt.compare(password, findUser.password);
       if (isMatchPassword) {
         const token = jwt.sign(
-          { _id: findUser._id, name: findUser.name, email: findUser.email },
+          {
+            _id: findUser._id,
+            name: findUser.name,
+            email: findUser.email,
+            role: "user",
+          },
           process.env.SECRETKEY,
           {
             expiresIn: "7d",
@@ -58,14 +63,14 @@ const signInUser = async (req, res) => {
           status: 200,
           message: "user signin successfully",
         });
-      }else{
-        res.status(401).send({message : "email or password not valid !" });
+      } else {
+        res.status(401).send({ message: "email or password not valid !" });
       }
     } else {
-      res.status(401).send({message : "email or password not valid !" });
+      res.status(401).send({ message: "email or password not valid !" });
     }
   } catch (error) {
-    res.status(500).send( {message : "something went wrong !"});
+    res.status(500).send({ message: "something went wrong !" });
     console.log("signUpUser", error);
   }
 };

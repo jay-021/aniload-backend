@@ -2,20 +2,18 @@ const express = require("express");
 const connectDB = require("./connection");
 const cors = require("cors");
 const userRoute = require("./routes/userRoute");
+const adminRoute = require("./routes/adminRoute");
 const postRoute = require("./routes/postRoute");
-const PORT = 4000;
 
 const bodyParser = require("body-parser");
+
 require("dotenv").config();
 const corsOpts = {
-  origin: '*',
+  origin: "*",
 
-  methods: [
-    'GET',
-    'POST',
-  ],
+  methods: ["GET", "POST"],
 
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 const app = express();
@@ -27,8 +25,8 @@ connectDB();
 
 app.use("/user", userRoute);
 app.use("/post", postRoute);
+app.use("/admin", adminRoute);
 
-
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server started...`);
 });
